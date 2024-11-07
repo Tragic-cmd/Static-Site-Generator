@@ -21,7 +21,7 @@ class TestTextNode(unittest.TestCase):
     def test_not_eq_type(self):
         # testing text_type comparison
         node7 = TextNode("This is a text node", TextType.BOLD)
-        node8 = TextNode("This is a text node", TextType.NORMAL)
+        node8 = TextNode("This is a text node", TextType.TEXT)
         self.assertNotEqual(node7, node8)
     def test_not_eq_text(self):
         # testing text comparison
@@ -29,14 +29,14 @@ class TestTextNode(unittest.TestCase):
         node10 = TextNode("This is a text node", TextType.BOLD)
         self.assertNotEqual(node9, node10)
     def test_repr(self):
-        node = TextNode("This is a text node", TextType.NORMAL, "https://www.boot.dev")
+        node = TextNode("This is a text node", TextType.TEXT, "https://www.boot.dev")
         self.assertEqual(
-            "TextNode(This is a text node, normal, https://www.boot.dev)", repr(node)
+            "TextNode(This is a text node, text, https://www.boot.dev)", repr(node)
         )
 
 class TestTextNodeToHTMLNode(unittest.TestCase):
     def test_text(self):
-        node = TextNode("This is a text node", TextType.NORMAL)
+        node = TextNode("This is a text node", TextType.TEXT)
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")

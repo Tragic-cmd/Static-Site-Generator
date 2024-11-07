@@ -1,7 +1,7 @@
 from textnode import TextNode, TextType
 
 def main():
-    test_node = TextNode("Lets hope this works", TextType.NORMAL, "https://github.com/Tragic-cmd")
+    test_node = TextNode("Lets hope this works", TextType.TEXT, "https://github.com/Tragic-cmd")
     print(test_node)
 
 
