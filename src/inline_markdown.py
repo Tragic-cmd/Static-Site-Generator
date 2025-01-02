@@ -104,6 +104,7 @@ def find_next_match(text, start_position):
     return earliest_match, earliest_match_type
 
 def text_to_textnodes(text):
+    
     current_position = 0
     new_nodes = []
 
@@ -117,34 +118,21 @@ def text_to_textnodes(text):
                 plain_text = text[current_position:earliest_match.start()]
                 new_nodes.append(TextNode(plain_text, TextType.TEXT))
 
-                if match_type in ['code', 'bold', 'italic']:
-                    segment = text[earliest_match.start():earliest_match.end()]
+            # Handle the match itself
+            content = earliest_match.group(1)  # Store matched content in a separate variable
+            if match_type == 'code':
+                new_nodes.append(TextNode(content, TextType.CODE))
+            elif match_type == 'bold':
+                new_nodes.append(TextNode(content, TextType.BOLD))
+            elif match_type == 'italic':
+                new_nodes.append(TextNode(content, TextType.ITALIC))
+            elif match_type == 'image':
+                text_content, url = earliest_match.groups()
+                new_nodes.append(TextNode(text_content, TextType.IMAGE, url))
+            elif match_type == 'link':
+                text_content, url = earliest_match.groups()
+                new_nodes.append(TextNode(text_content, TextType.LINK, url))
 
-                    if match_type == 'code':
-                        # Create a code node
-                        new_nodes.extend(split_nodes_delimiter([TextNode(segment, TextType.TEXT)], "`", TextType.CODE))
-
-                    elif match_type == 'bold':
-                        # Create a bold node
-                        new_nodes.extend(split_nodes_delimiter([TextNode(segment, TextType.TEXT)], "**", TextType.BOLD))
-
-                    elif match_type == 'italic':
-                        # Create an italic node
-                        new_nodes.extend(split_nodes_delimiter([TextNode(segment, TextType.TEXT)], "*", TextType.ITALIC))
-
-                else:
-                    # Process the specific markdown match
-                    if match_type == 'image':
-                        # Extract and create the image node
-                        for text, url in extract_markdown_images(segment):
-                            node = TextNode(segment, TextType.IMAGE, url)
-                            new_nodes.append(node)
-
-                    elif match_type == 'link':
-                        # Extract and create the link node
-                        for text, url in extract_markdown_links(segment):
-                            node = TextNode(segment, TextType.LINK, url)
-                            new_nodes.append(node)
 
             # Update current position to past this match
             current_position = earliest_match.end()
@@ -154,5 +142,3 @@ def text_to_textnodes(text):
             break
 
     return new_nodes
-
-
