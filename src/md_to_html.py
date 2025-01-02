@@ -31,36 +31,35 @@ def markdown_to_html_node(markdown):
             for item in items:
                 if item.strip() == "":
                     continue
-
+                
                 current_indent = len(item) - len(item.lstrip())
                 stripped = item.lstrip()
-                
-                # Parse content
-                if stripped.startswith("-"):
+
+                # Determine list item type and content
+                if stripped.startswith(("*", "-", "+")) and stripped[2:].strip():
+                    content = stripped[2:].strip()
                     list_type = "ul"
-                    content = stripped[2:]
                 else:
+                    parts = stripped.split(". ", 1)
+                    content = parts[1].strip() if len(parts) > 1 else ""
                     list_type = "ol"
-                    content = stripped.split(". ", 1)[1]
-                    
-                li_node = ParentNode("li", text_to_children(content))
-                
-                # Handle indentation
-                if current_indent > indent_levels[-1]:
-                    # Create new nested list
-                    new_list = ParentNode(list_type, [])
-                    if current_lists[-1].children: # If there are any items in current list
+
+                # Proceed only if there's content to process
+                if content:
+                    li_node = ParentNode("li", text_to_children(content))
+
+                    if current_indent > indent_levels[-1]:
+                        new_list = ParentNode(list_type, [])
                         current_lists[-1].children[-1].children.append(new_list)
-                    current_lists.append(new_list)
-                    indent_levels.append(current_indent)
-                elif current_indent < indent_levels[-1]:
-                    # Pop lists until we're at the right level
-                    while len(current_lists) > 1 and current_indent < indent_levels[-1]:
-                        current_lists.pop()
-                        indent_levels.pop()
+                        current_lists.append(new_list)
+                        indent_levels.append(current_indent)
+                    elif current_indent < indent_levels[-1]:
+                        while len(current_lists) > 1 and current_indent < indent_levels[-1]:
+                            current_lists.pop()
+                            indent_levels.pop()
                         
-                # Add the li_node to the current list
-                current_lists[-1].children.append(li_node)
+                    # Add the li_node to the current list
+                    current_lists[-1].children.append(li_node)
 
             block_nodes.append(root_list)
 

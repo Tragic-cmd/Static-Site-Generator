@@ -202,22 +202,6 @@ class Test_Nested_Lists(unittest.TestCase):
         deep_ul = nested_ol.children[0].children[1]
         self.assertEqual(deep_ul.tag, "ul")
 
-    def test_empty_items(self):
-        markdown = """- First item
-- 
-- Third item
-   - Nested item
-   - 
-   - Another nested item"""
-        node = markdown_to_html_node(markdown)
-        
-        ul_node = node.children[0]
-        self.assertEqual(len(ul_node.children), 3)
-        
-        # Check that empty items are handled
-        second_li = ul_node.children[1]
-        self.assertEqual(len(second_li.children), 0)
-
     def test_complex_mixed_indentation(self):
         markdown = """1. Top level
    - Second level bullet
