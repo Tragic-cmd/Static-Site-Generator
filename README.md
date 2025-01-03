@@ -7,9 +7,6 @@ This tool takes raw markdown files including links and images and converts them 
 1. [Installation]
 2. [Usage]
 3. [Features]
-4. [Contributing]
-5. [License]
-6. [Contact]
 
 ## Installation
 
