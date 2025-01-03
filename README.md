@@ -14,10 +14,10 @@ To install, you simply need to clone the repository below using the provided com
 
 ```bash
 # Clone the repository
-git clone https://github.com/github-username/repo-name.git
+git clone https://github.com/Tragic-cmd/Static-Site-Generator.git
 
 # Navigate into the project directory
-cd repo-name
+cd Path/to/Static-Site-Generator
 ```
 
 ## Usage
