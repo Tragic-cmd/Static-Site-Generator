@@ -7,10 +7,10 @@ def main():
     copy_static_to_public()
 
     # Generate the main index HTML page
-    generate_page(
-        from_path="/home/tragic/workspace/github.com/tragic-cmd/Static-Site-Generator/content/index.md",
+    generate_pages_recursive(
+        dir_path_content="/home/tragic/workspace/github.com/tragic-cmd/Static-Site-Generator/content",
         template_path="/home/tragic/workspace/github.com/tragic-cmd/Static-Site-Generator/template.html",
-        dest_path="/home/tragic/workspace/github.com/tragic-cmd/Static-Site-Generator/public/index.html"
+        dest_dir_path="/home/tragic/workspace/github.com/tragic-cmd/Static-Site-Generator/public"
     )
 
 def copy_static_to_public():
@@ -35,7 +35,7 @@ def copy_static_to_public():
                 if not os.path.exists(full_pub_path):
                     os.mkdir(full_pub_path)
                 # Recursive call for directory
-                copy_files(full_stat_path, full_pub_path)  # Modify to accept two paths
+                copy_files(full_stat_path, full_pub_path)
     # Start the copying process
     copy_files(stat_path, pub_path)
 
@@ -75,6 +75,17 @@ def generate_page(from_path, template_path, dest_path):
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, 'w', encoding='utf-8') as file:
         file.write(full_html_content)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for item in os.listdir(dir_path_content):
+        full_content_path = os.path.join(dir_path_content, item)
+        full_dest_path = os.path.join(dest_dir_path, item)
+        if os.path.isfile(full_content_path):
+            if item.endswith(".md"):
+                os.makedirs(os.path.dirname(full_dest_path), exist_ok=True)
+                generate_page(full_content_path, template_path, full_dest_path.replace(".md", ".html"))
+        else:
+            generate_pages_recursive(full_content_path, template_path, full_dest_path)
 
 if __name__ == "__main__":
     main()
